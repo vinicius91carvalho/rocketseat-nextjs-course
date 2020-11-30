@@ -35,12 +35,14 @@ export default function Category({ category, products }: CategoryProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const response = await fetch('http://localhost:3333/categories')
-    const categories = await response.json();
 
-    const paths = categories.map(category => ({
+    const categories = await client().query([
+        Prismic.Predicates.at('document.type', 'category')
+    ]);
+
+    const paths = categories.results.map(category => ({
         params: {
-            slug: category.id
+            slug: category.uid
         }
     }));
 
